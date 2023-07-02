@@ -1,10 +1,11 @@
 'use client'
+import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
 import { getSingleTodoFn, updateTodoFn } from '@/lib/utils/constants/queryFns'
 import { Todo } from '@prisma/client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 
 export default function UpdateTodoPage() {
   const [title, setTitle] = useState('')
@@ -25,7 +26,7 @@ export default function UpdateTodoPage() {
     // onError: (err: any) => toast.error(err.response.data.error),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] })
-      router.push('/')
+      router.push(AppRoutes.Home)
     }
   })
 
@@ -38,6 +39,13 @@ export default function UpdateTodoPage() {
     updateTodo()
   }
 
+  useEffect(() => {
+    if (data) {
+      setTitle(data.title)
+      setImportance(data.importance)
+    }
+  }, [data])
+
   if (valuesLoading) return <div>Loading...</div>
   if (!data) return <div>Not Found...</div>
 
@@ -49,16 +57,15 @@ export default function UpdateTodoPage() {
         className='flex gap-2 flex-col sm:w-2/3 md:w-1/3'
       >
         <input
-          value={title || data.title}
+          value={title}
           onChange={(e) => setTitle(e.target.value)}
           type='text'
-          className='border border-slate-100 bg-transparent rounded px-2 py-1 outline-none focus-within:border-slate-100'
+          className='input-primary'
         />
         <select
-          name='important'
-          value={importance || data.importance}
+          value={importance}
           onChange={(e) => setImportance(e.target.value)}
-          className='form-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-black py-2'
+          className='select-primary'
         >
           <option value='' disabled>
             Select Importance
@@ -66,22 +73,14 @@ export default function UpdateTodoPage() {
           <option value='important'>Important</option>
           <option value='not-important'>Not Important</option>
         </select>
-        <div
-          className='flex w-full 
-        sm:justify-between md:justify-end md:gap-3'
-        >
-          <Link
-            href='..'
-            className='border border-slate-300 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 focus-within:bg-slate-700 outline-none'
-          >
+        <div className='flex gap-1 justify-end'>
+          <Link href='..' className='btn-primary'>
             Cancel
           </Link>
           <button
             disabled={updateLoading}
             type='submit'
-            className='border border-slate-300 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 focus-within:bg-slate-700 outline-none
-            disabled:bg-slate-400
-            '
+            className='btn-primary'
           >
             Update
           </button>

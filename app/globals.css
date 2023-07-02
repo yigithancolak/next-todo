@@ -23,3 +23,18 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+@layer components {
+  .btn-primary {
+    @apply border-2 border-black font-bold text-black px-2 py-1 rounded hover:bg-black hover:text-primary outline-none focus-within:border-secondary focus-within:text-secondary outline-none
+    disabled:bg-slate-500 disabled:opacity-20;
+  }
+
+  .input-primary {
+    @apply border border-black bg-white rounded px-2 py-1 outline-none focus-within:border-secondary shadow-md;
+  }
+
+  .select-primary {
+    @apply w-full rounded-md border border-black shadow-md focus:border-secondary  py-2;
+  }
+}

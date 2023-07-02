@@ -1,8 +1,11 @@
 import Nav from '@/components/Nav'
 import Providers from '@/lib/utils/Providers/Provider.client'
-import SVGIMG from '@/public/github.svg'
+import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
+import GithubSvg from '@/public/github.svg'
+import NextSvg from '@/public/next.svg'
 import { Inter } from 'next/font/google'
 import Image from 'next/image'
+import Link from 'next/link'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -20,10 +23,15 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${inter.className} bg-slate-800 text-slate-100 min-h-screen`}
+        className={`${inter.className} bg-primary text-black min-h-screen font-medium`}
       >
         <header className='flex justify-between items-center p-4'>
-          <h1 className='text-2xl text-center'>Next Todos</h1>
+          <h1 className='text-2xl text-center uppercase text-black font-semibold'>
+            <Link href={AppRoutes.Home}>
+              <Image src={NextSvg} width={80} alt='Next' />
+              Todos
+            </Link>
+          </h1>
           <Nav />
         </header>
         <Providers>{children}</Providers>
@@ -32,7 +40,9 @@ export default function RootLayout({
         absolute bottom-0'
         >
           <div className='flex flex-col items-center'>
-            <Image src={SVGIMG} alt='github' width={40} />
+            <a href='https://github.com/yigithancolak' target='_blank'>
+              <Image src={GithubSvg} alt='github' width={40} />
+            </a>
             <span>Github: yigithancolak</span>
           </div>
         </footer>

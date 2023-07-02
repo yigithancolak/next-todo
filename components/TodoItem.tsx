@@ -1,4 +1,5 @@
 'use client'
+import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
 import { deleteTodoFn, updateTodoFn } from '@/lib/utils/constants/queryFns'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
@@ -35,41 +36,41 @@ export default function TodoItem(props: TodoItemProps) {
 
   return (
     <li
-      className={`flex relative gap-1 items-center border ${
-        isLoading ? 'border-red-600' : 'border-white'
-      } px-2 mb-2 last:mb-0 rounded`}
+      className={`flex relative gap-1 items-center border-2 ${
+        isLoading ? 'border-red-600' : 'border-black'
+      } p-2 mb-2 last:mb-0 rounded`}
     >
-      <input
-        id={id.toString()}
-        onChange={(e) => {
-          setChecked(e.target.checked)
-          updateTodo(e.target.checked)
-        }}
-        type='checkbox'
-        checked={checked}
-        className='cursor-pointer peer'
-      />
-      <label
-        htmlFor={id.toString()}
-        className='peer-checked:line-through cursor-pointer peer-checked:text-slate-500 p-2 border-r w-1/2 whitespace-normal break-words'
-      >
-        {title}
-      </label>
-      {importance === 'important' && (
-        <>
-          <div className='w-3 h-3 bg-red-500 rounded-full' />
-          <span className='text-xs'>Important</span>
-        </>
-      )}
-      <div className='flex absolute right-2 gap-2'>
+      <div className='flex items-center gap-4 w-3/4 p-1'>
+        {importance === 'important' && (
+          <div className='absolute left-0 top-0 bg-red-600 w-full h-2' />
+        )}
+        <input
+          id={id.toString()}
+          onChange={(e) => {
+            setChecked(e.target.checked)
+            updateTodo(e.target.checked)
+          }}
+          type='checkbox'
+          checked={checked}
+          className='cursor-pointer peer'
+        />
+        <label
+          htmlFor={id.toString()}
+          className='peer-checked:line-through cursor-pointer peer-checked:text-secondary w-[95%] whitespace-normal break-words'
+        >
+          {title}
+        </label>
+      </div>
+
+      <div className='flex absolute right-2 gap-2 h-full items-center'>
         <button
           className='flex'
-          onClick={() => router.push(`/update-todo/${id}`)}
+          onClick={() => router.push(`${AppRoutes.Update}/${id}`)}
         >
-          <AiFillEdit fontSize={20} className='text-yellow-300' />
+          <AiFillEdit fontSize={25} className='text-yellow-300' />
         </button>
         <button className='flex' onClick={() => deleteTodo()}>
-          <AiOutlineDelete fontSize={20} className='text-red-500' />
+          <AiOutlineDelete fontSize={25} className='text-red-600' />
         </button>
       </div>
     </li>
