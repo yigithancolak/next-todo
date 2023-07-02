@@ -25,7 +25,7 @@ export async function PATCH(
     params: { id: string }
   }
 ) {
-  const { title, importance } = await req.json()
+  const { title, importance, complete } = await req.json()
 
   const id = Number(params.id)
 
@@ -34,7 +34,8 @@ export async function PATCH(
       where: { id },
       data: {
         title,
-        importance
+        importance,
+        complete
       }
     })
 

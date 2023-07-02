@@ -39,11 +39,12 @@ export default function NewTodoPage() {
   }
 
   return (
-    <div className='flex flex-col items-center'>
-      <header className='flex justify-between items-center mb-4'>
-        <h1 className='text-2xl text-center'>Create New Todo</h1>
-      </header>
-      <form onSubmit={createTodo} className='flex gap-2 flex-col w-1/2'>
+    <section className='flex flex-col items-center'>
+      <h3 className='text-2xl text-center p-3'>Create New Todo</h3>
+      <form
+        onSubmit={createTodo}
+        className='flex gap-2 flex-col sm:w-2/3 md:w-1/3'
+      >
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -77,6 +78,6 @@ export default function NewTodoPage() {
           </button>
         </div>
       </form>
-    </div>
+    </section>
   )
 }

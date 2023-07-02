@@ -1,4 +1,8 @@
+import Nav from '@/components/Nav'
+import Providers from '@/lib/utils/Providers/Provider.client'
+import SVGIMG from '@/public/github.svg'
 import { Inter } from 'next/font/google'
+import Image from 'next/image'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -16,9 +20,22 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${inter.className} bg-slate-800 text-slate-100 container mx-auto p-4`}
+        className={`${inter.className} bg-slate-800 text-slate-100 min-h-screen`}
       >
-        {children}
+        <header className='flex justify-between items-center p-4'>
+          <h1 className='text-2xl text-center'>Next Todos</h1>
+          <Nav />
+        </header>
+        <Providers>{children}</Providers>
+        <footer
+          className='w-full  p-2 border-t
+        absolute bottom-0'
+        >
+          <div className='flex flex-col items-center'>
+            <Image src={SVGIMG} alt='github' width={40} />
+            <span>Github: yigithancolak</span>
+          </div>
+        </footer>
       </body>
     </html>
   )

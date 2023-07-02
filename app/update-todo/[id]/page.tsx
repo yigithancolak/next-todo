@@ -1,78 +1,62 @@
 'use client'
+import { getSingleTodoFn, updateTodoFn } from '@/lib/utils/constants/queryFns'
+import { Todo } from '@prisma/client'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 export default function UpdateTodoPage() {
   const [title, setTitle] = useState('')
   const [importance, setImportance] = useState('')
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const { id } = useParams()
 
-  useEffect(() => {
-    //Fetching default values of form
-    const fetchTodo = async () => {
-      const res = await fetch(`/api/todos/${id}`)
+  const { data, isLoading: valuesLoading } = useQuery<Todo>({
+    queryKey: ['singleTodo', id],
+    queryFn: () => getSingleTodoFn(id)
+  })
 
-      if (!res.ok) {
-        console.log(res)
-      }
-
-      return await res.json()
+  const { mutateAsync: updateTodo, isLoading: updateLoading } = useMutation({
+    mutationFn: () =>
+      updateTodoFn({ id, title, importance, complete: data?.complete! }),
+    // onError: (err: any) => toast.error(err.response.data.error),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] })
+      router.push('/')
     }
+  })
 
-    fetchTodo().then((data) => {
-      setTitle(data.title)
-      setImportance(data.importance)
-    })
-  }, [id])
-
-  async function updateTodo(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
     if (title === '' || importance === '') {
       return
     }
-
-    try {
-      const res = await fetch(`/api/todos/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          title,
-          importance
-        })
-      })
-
-      if (!res.ok) {
-        throw new Error('Failed to update todo')
-      }
-
-      // Update was successful, redirect the home page
-      router.push('/')
-    } catch (err) {
-      console.error(err)
-    }
+    updateTodo()
   }
 
+  if (valuesLoading) return <div>Loading...</div>
+  if (!data) return <div>Not Found...</div>
+
   return (
-    <div className='flex flex-col items-center'>
-      <header className='flex justify-between items-center mb-4'>
-        <h1 className='text-2xl text-center'>Update Todo</h1>
-      </header>
-      <form onSubmit={updateTodo} className='flex gap-2 flex-col w-1/2'>
+    <section className='flex flex-col items-center'>
+      <h3 className='text-2xl text- mb-4'>Update Todo</h3>
+      <form
+        onSubmit={handleSubmit}
+        className='flex gap-2 flex-col sm:w-2/3 md:w-1/3'
+      >
         <input
-          value={title}
+          value={title || data.title}
           onChange={(e) => setTitle(e.target.value)}
           type='text'
           className='border border-slate-100 bg-transparent rounded px-2 py-1 outline-none focus-within:border-slate-100'
         />
         <select
           name='important'
-          value={importance}
+          value={importance || data.importance}
           onChange={(e) => setImportance(e.target.value)}
           className='form-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-black py-2'
         >
@@ -82,7 +66,10 @@ export default function UpdateTodoPage() {
           <option value='important'>Important</option>
           <option value='not-important'>Not Important</option>
         </select>
-        <div className='flex gap-1 justify-end'>
+        <div
+          className='flex w-full 
+        sm:justify-between md:justify-end md:gap-3'
+        >
           <Link
             href='..'
             className='border border-slate-300 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 focus-within:bg-slate-700 outline-none'
@@ -90,13 +77,16 @@ export default function UpdateTodoPage() {
             Cancel
           </Link>
           <button
+            disabled={updateLoading}
             type='submit'
-            className='border border-slate-300 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 focus-within:bg-slate-700 outline-none'
+            className='border border-slate-300 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 focus-within:bg-slate-700 outline-none
+            disabled:bg-slate-400
+            '
           >
             Update
           </button>
         </div>
       </form>
-    </div>
+    </section>
   )
 }

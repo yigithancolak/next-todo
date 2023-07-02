@@ -1,51 +1,28 @@
+'use client'
 import TodoItem from '@/components/TodoItem'
-import { prisma } from '@/prisma/db'
-import Link from 'next/link'
+import { getTodosFn } from '@/lib/utils/constants/queryFns'
+import { Todo } from '@prisma/client'
+import { useQuery } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 
-// function getTodos() {
-//   return prisma.todo.findMany()
-// }
+export default function Home() {
+  const router = useRouter()
 
-async function toggleTodo(id: number, complete: boolean) {
-  'use server'
-
-  await prisma.todo.update({
-    where: { id },
-    data: {
-      complete
-    }
+  const { data, isLoading } = useQuery<Todo[]>({
+    queryKey: ['todos'],
+    queryFn: getTodosFn
   })
-}
 
-async function getTodos() {
-  const res = await fetch(`${process.env.BASE_URL}/api/todos`)
-  if (!res.ok) {
-    console.log(res)
-  }
-  return res.json()
-}
-
-export default async function Home() {
-  const todos = await getTodos()
+  if (isLoading) return <div>Loading...</div>
+  if (!data) return <div>Not Found...</div>
 
   return (
-    <>
-      <header className='flex justify-between items-center mb-4'>
-        <Link
-          className='border border-slate-300 text-slate-300 px-2 py-1 rounded hover:bg-slate-700 focus-within:bg-slate-700 outline-none'
-          href='/new-todo'
-        >
-          New Todo
-        </Link>
-        <h1 className='text-2xl text-center'>Next Todos</h1>
-      </header>
-      <main className='flex  flex-col items-center'>
-        <ul className='w-full md:w-2/3'>
-          {todos?.map((todo: any) => (
-            <TodoItem key={todo.id} {...todo} toggleTodo={toggleTodo} />
-          ))}
-        </ul>
-      </main>
-    </>
+    <main className='flex max-h-[70vh]  flex-col items-center px-4 overflow-auto'>
+      <ul className='w-full md:w-2/3'>
+        {data.map((todo: any) => (
+          <TodoItem key={todo.id} {...todo} />
+        ))}
+      </ul>
+    </main>
   )
 }
