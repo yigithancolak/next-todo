@@ -40,7 +40,7 @@ export default async function Home() {
         <h1 className='text-2xl text-center'>Next Todos</h1>
       </header>
       <main className='flex  flex-col items-center'>
-        <ul className='sm:w-2/3 md:w-1/3'>
+        <ul className='w-full md:w-2/3'>
           {todos?.map((todo: any) => (
             <TodoItem key={todo.id} {...todo} toggleTodo={toggleTodo} />
           ))}

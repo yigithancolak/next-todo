@@ -14,16 +14,28 @@ export default function NewTodoPage() {
     if (title === '' || importance === '') {
       return
     }
-    const res = await fetch('/api/todos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        title,
-        importance
+
+    try {
+      const res = await fetch('/api/todos', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title,
+          importance
+        })
       })
-    }).then(() => router.push('/'))
+
+      if (!res.ok) {
+        throw new Error('Failed to create todo')
+      }
+
+      // Todo creation was successful, redirect
+      router.replace('/')
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return (

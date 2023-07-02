@@ -1,6 +1,6 @@
 import { prisma } from '@/prisma/db'
 
-export async function GET(req: Request, res: Response) {
+export async function GET() {
   try {
     const data = await prisma.todo.findMany()
 
@@ -10,7 +10,7 @@ export async function GET(req: Request, res: Response) {
   }
 }
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
   const { title, importance } = await req.json()
   try {
     const data = await prisma.todo.create({

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
 
-export default async function UpdateTodoPage() {
+export default function UpdateTodoPage() {
   const [title, setTitle] = useState('')
   const [importance, setImportance] = useState('')
   const router = useRouter()
@@ -11,6 +11,7 @@ export default async function UpdateTodoPage() {
   const { id } = useParams()
 
   useEffect(() => {
+    //Fetching default values of form
     const fetchTodo = async () => {
       const res = await fetch(`/api/todos/${id}`)
 
@@ -33,16 +34,28 @@ export default async function UpdateTodoPage() {
     if (title === '' || importance === '') {
       return
     }
-    const res = await fetch('/api/todos', {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        title,
-        importance
+
+    try {
+      const res = await fetch(`/api/todos/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title,
+          importance
+        })
       })
-    }).then(() => router.push('/'))
+
+      if (!res.ok) {
+        throw new Error('Failed to update todo')
+      }
+
+      // Update was successful, redirect the home page
+      router.push('/')
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return (
