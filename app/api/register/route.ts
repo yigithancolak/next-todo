@@ -25,6 +25,6 @@ export async function POST(req: Request) {
 
     return new Response(JSON.stringify(user), { status: 201 })
   } catch (error) {
-    return new Response('Failed to create todo', { status: 500 })
+    return new Response('Failed to create user', { status: 500 })
   }
 }
