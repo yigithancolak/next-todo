@@ -42,23 +42,6 @@ export default function RegisterPage() {
     } catch (err) {
       console.log(err)
     }
-
-    // const password = await hash(userInfo.password, 12)
-    // const user = await prisma.user.create({
-    //   data: {
-    //     name: userInfo.name,
-    //     email: userInfo.email,
-    //     password: userInfo.password
-    //   }
-    // })
-    //token for e-mail confirmation
-    // const token = await prisma.activateToken.create({
-    //     data:{
-    //         token: `${randomUUID()}${randomUUID()}`.replace(/-/g,''),
-    //         userId:user.id
-    //     }
-    // })
-    //continue with e-mail sending service
   }
 
   return (
