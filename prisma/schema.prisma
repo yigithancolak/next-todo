@@ -10,6 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  password  String
+  active    Boolean   @default(true) //can be set to false for email confirmation.
+  // activateToken ActivateToken[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  todos Todo[] 
+}
+
 model Todo {
   id        Int @id @default(autoincrement())
   title     String
@@ -17,4 +29,6 @@ model Todo {
   complete  Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  userId    Int
+  user      User  @relation(fields: [userId], references: [id])
 }
