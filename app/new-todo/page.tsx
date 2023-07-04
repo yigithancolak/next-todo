@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 
 export default function NewTodoPage() {
+  const [isCreating, setIsCreating] = useState(false)
   const [title, setTitle] = useState('')
   const [importance, setImportance] = useState('')
   const router = useRouter()
@@ -19,6 +20,7 @@ export default function NewTodoPage() {
     }
 
     try {
+      setIsCreating(true)
       const res = await fetch('/api/todos', {
         method: 'POST',
         headers: {
@@ -34,9 +36,11 @@ export default function NewTodoPage() {
         throw new Error('Failed to create todo')
       }
 
+      setIsCreating(false)
       // Todo creation was successful, redirect
       router.push(AppRoutes.Home)
     } catch (err) {
+      setIsCreating(false)
       console.error(err)
     }
   }
@@ -76,7 +80,7 @@ export default function NewTodoPage() {
           <Link href='..' className='btn-primary'>
             Cancel
           </Link>
-          <button type='submit' className='btn-primary'>
+          <button disabled={isCreating} type='submit' className='btn-primary'>
             Create
           </button>
         </div>

@@ -22,7 +22,7 @@ export default function TodoItem(props: TodoItemProps) {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const { mutateAsync: deleteTodo, isLoading } = useMutation({
+  const { mutateAsync: deleteTodo, isLoading: deleteLoading } = useMutation({
     mutationFn: () => deleteTodoFn(id),
     // onError: (err: any) => toast.error(err.response.data.error),
     onSuccess: () => {
@@ -39,8 +39,8 @@ export default function TodoItem(props: TodoItemProps) {
   return (
     <li
       className={`flex relative gap-1 items-center border-2 ${
-        isLoading ? 'border-red-600' : 'border-black'
-      } p-2 mb-2 last:mb-0 rounded`}
+        deleteLoading ? 'border-red-600' : 'border-black'
+      } p-2 mb-2 last:mb-0 rounded ${deleteLoading && 'opacity-30'}  `}
     >
       <div className='flex items-center gap-4 w-3/4 p-1'>
         {importance === 'important' && (
@@ -73,12 +73,17 @@ export default function TodoItem(props: TodoItemProps) {
 
       <div className='flex absolute right-2 gap-2 h-full items-center'>
         <button
+          disabled={deleteLoading}
           className='flex'
           onClick={() => router.push(`${AppRoutes.Update}/${id}`)}
         >
           <AiFillEdit fontSize={25} className='text-yellow-300' />
         </button>
-        <button className='flex' onClick={() => deleteTodo()}>
+        <button
+          disabled={deleteLoading}
+          className='flex'
+          onClick={() => deleteTodo()}
+        >
           <AiOutlineDelete fontSize={25} className='text-red-600' />
         </button>
       </div>
