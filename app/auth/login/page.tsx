@@ -1,38 +1,64 @@
 'use client'
 
+import { containerVariant } from '@/lib/framer-motion/variants'
 import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
+import { motion } from 'framer-motion'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { FormEventHandler, useState } from 'react'
 
 export default function LoginPage() {
   const [userInfo, setUserInfo] = useState({ email: '', password: '' })
+  const [loading, setLoading] = useState(false)
 
   const { data: session } = useSession()
 
   const handleTestSignIn = async () => {
-    const res = await signIn('credentials', {
-      email: 'test@test.com',
-      password: 'test',
-      callbackUrl: AppRoutes.Home,
-      redirect: true
-    })
+    try {
+      setLoading(true)
+      const res = await signIn('credentials', {
+        email: 'test@test.com',
+        password: 'test',
+        callbackUrl: AppRoutes.Home,
+        redirect: true
+      })
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      throw error
+    }
   }
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     // validate your userinfo
     e.preventDefault()
 
-    const res = await signIn('credentials', {
-      email: userInfo.email,
-      password: userInfo.password,
-      callbackUrl: AppRoutes.Home,
-      redirect: true
-    })
+    if (!userInfo.email || !userInfo.password) {
+      return
+    }
+    try {
+      setLoading(true)
+      const res = await signIn('credentials', {
+        email: userInfo.email,
+        password: userInfo.password,
+        callbackUrl: AppRoutes.Home,
+        redirect: true
+      })
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
   }
 
   return (
-    <section className='flex justify-center items-center h-[60vh]'>
+    <motion.section
+      variants={containerVariant}
+      initial='hidden'
+      animate='visible'
+      //animation
+
+      className='flex justify-center items-center h-[60vh]'
+    >
       {!session ? (
         <form
           onSubmit={handleSubmit}
@@ -58,10 +84,11 @@ export default function LoginPage() {
             className='input-primary'
           />
 
-          <button type='submit' className='btn-primary'>
-            Sign In
+          <button disabled={loading} type='submit' className='btn-primary'>
+            {!loading ? 'Sign In' : 'Loading...'}
           </button>
           <button
+            disabled={loading}
             type='button'
             className='btn-primary'
             onClick={() => handleTestSignIn()}
@@ -83,6 +110,6 @@ export default function LoginPage() {
           </button>
         </p>
       )}
-    </section>
+    </motion.section>
   )
 }

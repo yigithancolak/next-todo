@@ -1,8 +1,11 @@
 'use client'
+import Loading from '@/components/Loading/Loading'
+import { containerVariant } from '@/lib/framer-motion/variants'
 import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
 import { getSingleTodoFn, updateTodoFn } from '@/lib/utils/constants/queryFns'
 import { Todo } from '@prisma/client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
@@ -46,11 +49,28 @@ export default function UpdateTodoPage() {
     }
   }, [data])
 
-  if (valuesLoading) return <div>Loading...</div>
-  if (!data) return <div>Not Found...</div>
+  if (valuesLoading)
+    return (
+      <div className='flex h-[40vh] items-center justify-center'>
+        <Loading />
+      </div>
+    )
+  if (!data)
+    return (
+      <div className='flex h-[40vh] items-center justify-center'>
+        <p className='text-center text-h3'>Todo has not found.</p>
+      </div>
+    )
 
   return (
-    <section className='flex flex-col items-center'>
+    <motion.section
+      variants={containerVariant}
+      initial='hidden'
+      animate='visible'
+      //animation
+
+      className='flex flex-col items-center'
+    >
       <h3 className='text-2xl text- mb-4'>Update Todo</h3>
       <form
         onSubmit={handleSubmit}
@@ -86,6 +106,6 @@ export default function UpdateTodoPage() {
           </button>
         </div>
       </form>
-    </section>
+    </motion.section>
   )
 }

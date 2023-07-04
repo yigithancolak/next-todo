@@ -1,7 +1,9 @@
 'use client'
+import { todoItemVariant } from '@/lib/framer-motion/variants'
 import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
 import { deleteTodoFn, updateTodoFn } from '@/lib/utils/constants/queryFns'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { AiFillEdit, AiOutlineDelete } from 'react-icons/ai'
@@ -42,7 +44,14 @@ export default function TodoItem(props: TodoItemProps) {
     >
       <div className='flex items-center gap-4 w-3/4 p-1'>
         {importance === 'important' && (
-          <div className='absolute left-0 top-0 bg-red-600 w-full h-2' />
+          <motion.div
+            variants={todoItemVariant}
+            initial='hidden'
+            animate='visible'
+            //animations
+
+            className='absolute left-0 top-0 bg-red-600 w-full h-2'
+          />
         )}
         <input
           id={id.toString()}

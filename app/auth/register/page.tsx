@@ -1,6 +1,8 @@
 'use client'
 
+import { containerVariant } from '@/lib/framer-motion/variants'
 import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
@@ -11,6 +13,8 @@ export default function RegisterPage() {
     password: '',
     name: ''
   })
+  const [loading, setLoading] = useState(false)
+
   const router = useRouter()
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -21,6 +25,7 @@ export default function RegisterPage() {
     }
 
     try {
+      setLoading(true)
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: {
@@ -32,6 +37,7 @@ export default function RegisterPage() {
           password
         })
       })
+      setLoading(false)
 
       if (!res.ok) {
         throw new Error('Failed to create todo')
@@ -39,13 +45,21 @@ export default function RegisterPage() {
 
       // Todo creation was successful, redirect
       router.push(AppRoutes.Login)
-    } catch (err) {
-      console.log(err)
+    } catch (error) {
+      setLoading(false)
+      throw error
     }
   }
 
   return (
-    <section className='flex flex-col justify-center items-center h-[60vh]'>
+    <motion.section
+      variants={containerVariant}
+      initial='hidden'
+      animate='visible'
+      //animation
+
+      className='flex flex-col justify-center items-center h-[60vh]'
+    >
       <h2 className='text-h2 text-center'>Register</h2>
 
       <form
@@ -76,8 +90,8 @@ export default function RegisterPage() {
           }
         />
 
-        <button type='submit' className='btn-primary'>
-          Register
+        <button type='submit' className='btn-primary' disabled={loading}>
+          {!loading ? 'Sign Up' : 'Loading...'}
         </button>
         <p>
           Have an account ?{' '}
@@ -88,6 +102,6 @@ export default function RegisterPage() {
           }
         </p>
       </form>
-    </section>
+    </motion.section>
   )
 }

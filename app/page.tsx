@@ -35,7 +35,7 @@ export default function Home() {
   return (
     <main className='flex h-[75vh] flex-col items-center px-4 overflow-auto'>
       <ul className='w-full md:w-2/3'>
-        {data.map((todo: any) => (
+        {data.map((todo: Todo) => (
           <TodoItem key={todo.id} {...todo} />
         ))}
       </ul>

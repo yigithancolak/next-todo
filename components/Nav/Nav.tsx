@@ -31,7 +31,10 @@ export default function Nav(props: NavProps) {
             <Link className='btn-primary' href={AppRoutes.New}>
               Create New Todo
             </Link>
-            <button className='btn-primary' onClick={() => signOut()}>
+            <button
+              className='btn-primary bg-red-600 text-white border-secondary'
+              onClick={() => signOut()}
+            >
               Sign Out
             </button>
           </>
@@ -52,7 +55,10 @@ export default function Nav(props: NavProps) {
             <Link className='btn-primary' href={AppRoutes.New}>
               <IoCreateOutline fontSize={20} />
             </Link>
-            <button className='btn-primary' onClick={() => signOut()}>
+            <button
+              className='btn-primary bg-red-600 text-white border-secondary'
+              onClick={() => signOut()}
+            >
               <FiLogOut fontSize={20} />
             </button>
           </>

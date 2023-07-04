@@ -1,5 +1,7 @@
 'use client'
+import { containerVariant } from '@/lib/framer-motion/variants'
 import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useState } from 'react'
@@ -40,7 +42,14 @@ export default function NewTodoPage() {
   }
 
   return (
-    <section className='flex flex-col items-center'>
+    <motion.section
+      variants={containerVariant}
+      initial='hidden'
+      animate='visible'
+      //animation
+
+      className='flex flex-col items-center'
+    >
       <h3 className='text-2xl text-center p-3'>Create New Todo</h3>
       <form
         onSubmit={createTodo}
@@ -72,6 +81,6 @@ export default function NewTodoPage() {
           </button>
         </div>
       </form>
-    </section>
+    </motion.section>
   )
 }
