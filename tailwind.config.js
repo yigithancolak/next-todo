@@ -23,21 +23,19 @@ module.exports = {
         '2xl': '6rem'
       },
       fontSize: {
-        h1: '2.25rem', // Font size for <h1>
-        h2: '1.875rem', // Font size for <h2>
-        h3: '1.5rem' // Font size for <h3>
-        // Add more as needed...
+        h1: '2.25rem',
+        h2: '1.875rem',
+        h3: '1.5rem'
       },
       lineHeight: {
-        h1: '2.5rem', // Line height for <h1>
-        h2: '2.125rem', // Line height for <h2>
-        h3: '1.75rem' // Line height for <h3>
-        // Add more as needed...
+        h1: '2.5rem',
+        h2: '2.125rem',
+        h3: '1.75rem'
       },
       fontWeight: {
-        h1: '700', // Font weight for <h1>
-        h2: '600', // Font weight for <h2>
-        h3: '500' // Font weight for <h3>
+        h1: '700',
+        h2: '600',
+        h3: '500'
       },
       container: {
         padding: {

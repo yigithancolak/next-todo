@@ -53,7 +53,6 @@ export default function NewTodoPage() {
           className='input-primary'
         />
         <select
-          name='important'
           value={importance}
           onChange={(e) => setImportance(e.target.value)}
           className='select-primary'

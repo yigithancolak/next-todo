@@ -1,4 +1,4 @@
-import Nav from '@/components/Nav'
+import Nav from '@/components/Nav/Nav'
 import Providers from '@/lib/utils/Providers/Provider.client'
 import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
 import GithubSvg from '@/public/github.svg'

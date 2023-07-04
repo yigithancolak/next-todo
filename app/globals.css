@@ -26,7 +26,7 @@
 
 @layer components {
   .btn-primary {
-    @apply border-2 border-black font-bold text-black px-2 py-1 rounded hover:bg-black hover:text-primary outline-none focus-within:border-secondary focus-within:text-secondary outline-none
+    @apply border-2 border-black font-bold text-black px-2 py-1 rounded hover:bg-black hover:text-primary outline-none focus-within:border-secondary focus-within:text-secondary
     disabled:bg-slate-500 disabled:opacity-20;
   }
 
@@ -35,6 +35,6 @@
   }
 
   .select-primary {
-    @apply w-full rounded-md border border-black shadow-md focus:border-secondary  py-2;
+    @apply w-full rounded-md border border-black shadow-md focus:border-secondary focus-within:border-secondary py-2 focus:outline-none focus:ring-2 focus:ring-secondary;
   }
 }
