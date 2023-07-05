@@ -1,6 +1,8 @@
 'use client'
 import { containerVariant } from '@/lib/framer-motion/variants'
 import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
+import { createTodoFn } from '@/lib/utils/constants/queryFns'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -11,8 +13,17 @@ export default function NewTodoPage() {
   const [title, setTitle] = useState('')
   const [importance, setImportance] = useState('')
   const router = useRouter()
+  const queryClient = useQueryClient()
 
-  async function createTodo(e: FormEvent<HTMLFormElement>) {
+  const { mutateAsync: createTodo } = useMutation({
+    mutationFn: createTodoFn,
+    onSuccess: () => {
+      router.push(AppRoutes.Home)
+      queryClient.invalidateQueries(['todos'])
+    }
+  })
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
     if (title === '' || importance === '') {
@@ -20,27 +31,10 @@ export default function NewTodoPage() {
     }
 
     try {
-      setIsCreating(true)
-      const res = await fetch('/api/todos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          title,
-          importance
-        })
-      })
+      createTodo({ title, importance })
 
-      if (!res.ok) {
-        throw new Error('Failed to create todo')
-      }
-
-      setIsCreating(false)
-      // Todo creation was successful, redirect
       router.push(AppRoutes.Home)
     } catch (err) {
-      setIsCreating(false)
       console.error(err)
     }
   }
@@ -56,7 +50,7 @@ export default function NewTodoPage() {
     >
       <h3 className='text-2xl text-center p-3'>Create New Todo</h3>
       <form
-        onSubmit={createTodo}
+        onSubmit={handleSubmit}
         className='flex gap-4 flex-col sm:w-2/3 md:w-1/3'
       >
         <input

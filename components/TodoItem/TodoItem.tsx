@@ -45,7 +45,7 @@ export default function TodoItem(props: TodoItemProps) {
       let updatedTodos: Todo[] = []
 
       if (previousTodos) {
-        updatedTodos = [...previousTodos].filter((todo) => todo.id !== id) // It should be 'todo.id !== id' not 'todo.id === id'
+        updatedTodos = [...previousTodos].filter((todo) => todo.id !== id)
       }
 
       queryClient.setQueryData<Todo[]>(['todos'], updatedTodos)

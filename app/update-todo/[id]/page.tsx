@@ -23,13 +23,49 @@ export default function UpdateTodoPage() {
     queryFn: () => getSingleTodoFn(id)
   })
 
-  const { mutateAsync: updateTodo, isLoading: updateLoading } = useMutation({
-    mutationFn: () =>
-      updateTodoFn({ id, title, importance, complete: data?.complete! }),
-    // onError: (err: any) => toast.error(err.response.data.error),
+  // const { mutateAsync: updateTodo, isLoading: updateLoading } = useMutation({
+  //   mutationFn: () =>
+  //     updateTodoFn({ id, title, importance, complete: data?.complete! }),
+  //   // onError: (err: any) => toast.error(err.response.data.error),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['todos'] })
+  //     router.push(AppRoutes.Home)
+  //   }
+  // })
+
+  const updateTodoMutation = useMutation({
+    //@ts-ignore
+    mutationFn: updateTodoFn,
+    onMutate: async (newTodo) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['todos'] })
+
+      // Snapshot the previous value
+      const previousTodos = queryClient.getQueryData<Todo[]>(['todos'])
+
+      // Optimistically update to the new value
+      if (previousTodos) {
+        const updatedTodos: Todo[] = [...previousTodos].map((todo) =>
+          todo.id === newTodo.id ? { ...todo, ...newTodo } : todo
+        )
+        queryClient.setQueryData<Todo[]>(['todos'], updatedTodos)
+      }
+
+      // Return a context object with the snapshotted value
+      return { previousTodos }
+    },
+    onError: (
+      err,
+      variables,
+      context: { previousTodos?: Todo[] | undefined }
+    ) => {
+      queryClient.setQueryData<Todo[]>(['todos'], context.previousTodos)
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['todos'] })
       router.push(AppRoutes.Home)
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] })
     }
   })
 
@@ -39,7 +75,13 @@ export default function UpdateTodoPage() {
     if (title === '' || importance === '') {
       return
     }
-    updateTodo()
+
+    updateTodoMutation.mutate({
+      id: Number(id),
+      title,
+      importance,
+      complete: data?.complete!
+    })
   }
 
   useEffect(() => {
@@ -98,7 +140,7 @@ export default function UpdateTodoPage() {
             Cancel
           </Link>
           <button
-            disabled={updateLoading}
+            disabled={updateTodoMutation.isLoading}
             type='submit'
             className='btn-primary'
           >

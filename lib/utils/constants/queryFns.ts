@@ -7,6 +7,32 @@ export async function getTodosFn() {
   }
 }
 
+type NewTodo = {
+  title: string
+  importance: string
+}
+
+export async function createTodoFn(newTodo: NewTodo) {
+  const { title, importance } = newTodo
+  try {
+    const res = await fetch('api/todos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title, importance })
+    })
+
+    if (!res.ok) {
+      throw new Error('Failed to create todo')
+    }
+
+    // Deletion was successful, redirect the home page
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 export async function deleteTodoFn(id: number) {
   try {
     const res = await fetch(`api/todos/${id}`, {
@@ -27,7 +53,7 @@ export async function deleteTodoFn(id: number) {
 }
 
 type UpdateTodoTypes = {
-  id: string | number
+  id: number
   title: string
   importance: string
   complete: boolean

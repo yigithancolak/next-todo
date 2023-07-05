@@ -13,7 +13,8 @@ export async function GET(req: Request) {
 
   try {
     const data = await prisma.todo.findMany({
-      where: { userId: Number(session.id) }
+      where: { userId: Number(session.id) },
+      orderBy: { createdAt: 'asc' }
     })
 
     return new Response(JSON.stringify(data), { status: 201 })
