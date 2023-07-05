@@ -2,6 +2,7 @@
 import { todoItemVariant } from '@/lib/framer-motion/variants'
 import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
 import { deleteTodoFn, updateTodoFn } from '@/lib/utils/constants/queryFns'
+import { Todo } from '@prisma/client'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
@@ -22,10 +23,44 @@ export default function TodoItem(props: TodoItemProps) {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const { mutateAsync: deleteTodo, isLoading: deleteLoading } = useMutation({
-    mutationFn: () => deleteTodoFn(id),
-    // onError: (err: any) => toast.error(err.response.data.error),
-    onSuccess: () => {
+  // const { mutateAsync: deleteTodo, isLoading: deleteLoading } = useMutation({
+  //   mutationFn: () => deleteTodoFn(id),
+  //   // onError: (err: any) => toast.error(err.response.data.error),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['todos'] })
+  //   }
+  // })
+
+  // Handle Delete Mutation to Update Optimistic Updates
+  const deleteMutation = useMutation({
+    mutationFn: deleteTodoFn,
+    onMutate: async (id) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['todos'] })
+
+      // Snapshot the previous value
+      const previousTodos = queryClient.getQueryData<Todo[]>(['todos'])
+
+      // Optimistically remove the todo from the array
+      let updatedTodos: Todo[] = []
+
+      if (previousTodos) {
+        updatedTodos = [...previousTodos].filter((todo) => todo.id !== id) // It should be 'todo.id !== id' not 'todo.id === id'
+      }
+
+      queryClient.setQueryData<Todo[]>(['todos'], updatedTodos)
+
+      // Return a context object with the snapshotted value
+      return { previousTodos }
+    },
+
+    // If the mutation fails, use the context we returned above
+    onError: (context: { previousTodos?: Todo[] | undefined }) => {
+      queryClient.setQueryData<Todo[]>(['todos'], context.previousTodos)
+    },
+
+    // Always refetch after error or success:
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] })
     }
   })
@@ -33,14 +68,12 @@ export default function TodoItem(props: TodoItemProps) {
   const { mutateAsync: updateTodo, isLoading: updateLoading } = useMutation({
     mutationFn: (complete: boolean) =>
       updateTodoFn({ id, title, importance, complete })
-    // onError: (err: any) => toast.error(err.response.data.error),
   })
 
   return (
     <li
-      className={`flex relative gap-1 items-center border-2 ${
-        deleteLoading ? 'border-red-600' : 'border-black'
-      } p-2 mb-2 last:mb-0 rounded ${deleteLoading && 'opacity-30'}  `}
+      className={`flex relative gap-1 items-center border-2  border-black
+       p-2 mb-2 last:mb-0 rounded `}
     >
       <div className='flex items-center gap-4 w-3/4 p-1'>
         {importance === 'important' && (
@@ -73,16 +106,16 @@ export default function TodoItem(props: TodoItemProps) {
 
       <div className='flex absolute right-2 gap-2 h-full items-center'>
         <button
-          disabled={deleteLoading}
+          disabled={updateLoading}
           className='flex'
           onClick={() => router.push(`${AppRoutes.Update}/${id}`)}
         >
           <AiFillEdit fontSize={25} className='text-yellow-300' />
         </button>
         <button
-          disabled={deleteLoading}
+          // disabled={deleteLoading}
           className='flex'
-          onClick={() => deleteTodo()}
+          onClick={() => deleteMutation.mutate(id)}
         >
           <AiOutlineDelete fontSize={25} className='text-red-600' />
         </button>

@@ -30,24 +30,21 @@ export default function LoginPage() {
   }
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-    // validate your userinfo
     e.preventDefault()
 
     if (!userInfo.email || !userInfo.password) {
       return
     }
-    try {
-      setLoading(true)
-      const res = await signIn('credentials', {
-        email: userInfo.email,
-        password: userInfo.password,
-        callbackUrl: AppRoutes.Home,
-        redirect: true
-      })
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-    }
+
+    setLoading(true)
+    signIn('credentials', {
+      email: userInfo.email,
+      password: userInfo.password,
+      callbackUrl: AppRoutes.Home,
+      redirect: true
+    })
+      .finally(() => setLoading(false))
+      .catch((error) => console.error(error))
   }
 
   return (

@@ -3,7 +3,8 @@ import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
 import { Session } from 'next-auth'
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
-import { AiOutlineLogin, AiOutlineQuestion } from 'react-icons/ai'
+import { usePathname } from 'next/navigation'
+import { AiOutlineQuestion } from 'react-icons/ai'
 import { FiLogOut } from 'react-icons/fi'
 import { IoCreateOutline } from 'react-icons/io5'
 
@@ -13,6 +14,7 @@ interface NavProps {
 
 export default function Nav(props: NavProps) {
   const { session } = props
+  const pathname = usePathname()
 
   return (
     <nav>
@@ -23,7 +25,11 @@ export default function Nav(props: NavProps) {
         </Link>
 
         {!session ? (
-          <button className='btn-primary' onClick={() => signIn()}>
+          <button
+            className='btn-primary'
+            disabled={pathname === AppRoutes.Login}
+            onClick={() => signIn()}
+          >
             Sign In
           </button>
         ) : (
@@ -47,8 +53,13 @@ export default function Nav(props: NavProps) {
         </Link>
 
         {!session ? (
-          <button className='btn-primary' onClick={() => signIn()}>
-            <AiOutlineLogin fontSize={20} />
+          <button
+            className='btn-primary'
+            disabled={pathname === AppRoutes.Login}
+            onClick={() => signIn()}
+          >
+            {/* <AiOutlineLogin fontSize={20} /> */}
+            Sign In
           </button>
         ) : (
           <>
