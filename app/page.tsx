@@ -5,7 +5,7 @@ import { getTodosFn } from '@/lib/utils/constants/queryFns'
 import { Todo } from '@prisma/client'
 import { useQuery } from '@tanstack/react-query'
 
-export default function Home() {
+export default function HomePage() {
   const { data, isLoading } = useQuery<Todo[]>({
     queryKey: ['todos'],
     queryFn: getTodosFn
@@ -35,7 +35,7 @@ export default function Home() {
   return (
     <main className='flex h-[75vh] flex-col items-center px-4 overflow-auto'>
       <ul className='w-full md:w-2/3'>
-        {data.map((todo) => (
+        {data.map((todo: Todo) => (
           <TodoItem key={todo.id} {...todo} />
         ))}
       </ul>

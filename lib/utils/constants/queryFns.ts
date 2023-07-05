@@ -1,5 +1,5 @@
 export async function getTodosFn() {
-  const res = await fetch('/api/todos')
+  const res = await fetch(`/api/todos`)
   if (!res.ok) {
     console.log(res)
   } else {

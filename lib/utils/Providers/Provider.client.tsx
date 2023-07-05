@@ -8,7 +8,7 @@ interface ProvidersProps {
 }
 
 export default function Providers(props: ProvidersProps) {
-  const [queryClient] = useState(() => new QueryClient())
+  const [queryClient] = useState(new QueryClient())
 
   return (
     <SessionProvider>
