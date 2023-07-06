@@ -2,6 +2,8 @@
 import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
 import { Session } from 'next-auth'
 import { signOut } from 'next-auth/react'
+import { Url } from 'next/dist/shared/lib/router/router'
+import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { AiOutlineQuestion } from 'react-icons/ai'
 import { FiLogOut } from 'react-icons/fi'
@@ -17,42 +19,43 @@ type NavButton = {
   title?: string
   icon: IconType
   authenticated: boolean
-  route?: String
+  route?: Url
   method?: () => void
 }
+
+const navButtons: NavButton[] = [
+  {
+    title: 'Info',
+    icon: AiOutlineQuestion,
+    authenticated: false,
+    route: AppRoutes.Info
+  },
+  {
+    title: 'Sign In',
+    icon: RiUserSharedLine,
+    authenticated: false,
+    route: AppRoutes.Login
+
+    // method: signIn
+  },
+  {
+    title: 'New Todo',
+    icon: IoCreateOutline,
+    authenticated: true,
+    route: AppRoutes.New
+  },
+  {
+    title: 'Sign Out',
+    icon: FiLogOut,
+    authenticated: true,
+    method: signOut
+  }
+]
 
 export default function Nav(props: NavProps) {
   const { session } = props
   const pathname = usePathname()
   const router = useRouter()
-
-  const navButtons: NavButton[] = [
-    {
-      title: 'Info',
-      icon: AiOutlineQuestion,
-      authenticated: false,
-      route: AppRoutes.Info
-    },
-    {
-      title: 'Sign In',
-      icon: RiUserSharedLine,
-      authenticated: false,
-      route: AppRoutes.Login
-      // method: signIn
-    },
-    {
-      title: 'New Todo',
-      icon: IoCreateOutline,
-      authenticated: true,
-      route: AppRoutes.New
-    },
-    {
-      title: 'Sign Out',
-      icon: FiLogOut,
-      authenticated: true,
-      method: signOut
-    }
-  ]
 
   const renderNavButtons = (pathname: string) => {
     const buttons = [...navButtons]
@@ -60,19 +63,25 @@ export default function Nav(props: NavProps) {
       .map((button) => {
         const { title, authenticated, method, route } = button
 
-        const clickFunction = () => {
-          if (typeof route === 'string') {
-            return () => router.push(route)
-          }
-
-          return method
+        if (!!route) {
+          return (
+            <Link
+              key={title}
+              href={route}
+              className={`btn-primary flex items-center ${
+                pathname === route && 'pointer-events-none opacity-20'
+              }`}
+            >
+              <span className='hidden md:inline mr-1'>{title}</span>
+              <button.icon className='inline' fontSize={20} />
+            </Link>
+          )
         }
 
         return (
           <button
-            disabled={pathname === route}
             key={title}
-            onClick={clickFunction()}
+            onClick={method}
             className='btn-primary flex items-center'
           >
             <span className='hidden md:inline mr-1'>{title}</span>
