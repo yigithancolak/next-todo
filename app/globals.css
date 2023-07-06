@@ -26,8 +26,7 @@
 
 @layer components {
   .btn-primary {
-    @apply border-2 border-black font-bold text-black px-2 py-1 rounded hover:bg-black hover:text-primary outline-none focus-within:border-secondary focus-within:text-secondary
-    disabled:bg-slate-500 disabled:opacity-20;
+    @apply border-2 border-black font-bold text-black px-2 py-1 rounded hover:bg-black hover:text-primary outline-none disabled:bg-slate-500 disabled:opacity-60;
   }
 
   .input-primary {
