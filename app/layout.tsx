@@ -29,7 +29,7 @@ export default async function RootLayout({
       <body
         className={`${inter.className} bg-primary text-black min-h-screen font-medium`}
       >
-        {/* Header */}
+        {/* HEADER */}
         <header className='flex justify-between items-center p-4'>
           <h1 className='text-2xl text-center uppercase text-black font-semibold'>
             <Link href={AppRoutes.Home}>
@@ -41,8 +41,9 @@ export default async function RootLayout({
         </header>
 
         {/* CONTENT */}
-        <Providers>{children}</Providers>
-
+        <main className='flex h-[75vh] flex-col items-center px-4 overflow-auto'>
+          <Providers>{children}</Providers>
+        </main>
         {/* FOOTER */}
         <footer
           className='w-full  p-2 border-t

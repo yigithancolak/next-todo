@@ -7,7 +7,7 @@ import { Todo } from '@prisma/client'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { useParams, useRouter } from 'next/navigation'
+import { notFound, useParams, useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
 
 export default function UpdateTodoPage() {
@@ -97,21 +97,17 @@ export default function UpdateTodoPage() {
         <Loading />
       </div>
     )
-  if (!data)
-    return (
-      <div className='flex h-[40vh] items-center justify-center'>
-        <p className='text-center text-h3'>Todo has not found.</p>
-      </div>
-    )
+  if (!data) throw notFound()
 
   return (
     <motion.section
+      //animations
       variants={containerVariant}
       initial='hidden'
       animate='visible'
-      //animation
+      //animations
 
-      className='flex flex-col items-center'
+      className='w-full h-full flex flex-col items-center'
     >
       <h3 className='text-2xl text- mb-4'>Update Todo</h3>
       <form

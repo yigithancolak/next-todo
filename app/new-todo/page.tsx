@@ -46,7 +46,7 @@ export default function NewTodoPage() {
       animate='visible'
       //animation
 
-      className='flex flex-col items-center'
+      className='flex flex-col items-center w-full h-full'
     >
       <h3 className='text-2xl text-center p-3'>Create New Todo</h3>
       <form

@@ -55,10 +55,8 @@ export default async function HomePage() {
   // }
 
   return (
-    <main className='flex h-[75vh] flex-col items-center px-4 overflow-auto'>
-      <Hydrate state={dehydratedState}>
-        <TodosContainer />
-      </Hydrate>
-    </main>
+    <Hydrate state={dehydratedState}>
+      <TodosContainer />
+    </Hydrate>
   )
 }

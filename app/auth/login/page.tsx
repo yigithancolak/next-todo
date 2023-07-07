@@ -54,14 +54,14 @@ export default function LoginPage() {
       animate='visible'
       //animation
 
-      className='flex justify-center items-center h-[60vh]'
+      className='flex flex-col justify-center items-center h-[60vh] w-full'
     >
+      <h2 className='text-h2 text-center mb-2'>Login</h2>
       {!session ? (
         <form
           onSubmit={handleSubmit}
           className='flex flex-col w-2/3 md:w-1/3 gap-2'
         >
-          <h2 className='text-h2 text-center'>Login</h2>
           <input
             value={userInfo.email}
             onChange={({ target }) =>

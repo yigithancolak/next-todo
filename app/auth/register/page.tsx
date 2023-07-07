@@ -58,9 +58,9 @@ export default function RegisterPage() {
       animate='visible'
       //animation
 
-      className='flex flex-col justify-center items-center h-[60vh]'
+      className='flex flex-col justify-center items-center h-[60vh] w-full'
     >
-      <h2 className='text-h2 text-center'>Register</h2>
+      <h2 className='text-h2 text-center mb-2'>Register</h2>
 
       <form
         onSubmit={handleSubmit}
