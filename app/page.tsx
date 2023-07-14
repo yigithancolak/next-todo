@@ -1,4 +1,3 @@
-// 'use client'
 import TodosContainer from '@/components/TodosContainer/TodosContainer'
 import Hydrate from '@/lib/tanstack-query/HydrateClient'
 import getQueryClient from '@/lib/tanstack-query/getQueryClient'
@@ -7,11 +6,6 @@ import { dehydrate } from '@tanstack/query-core'
 import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]/route'
 
-// const getTodos = async () => {
-
-//   const todos: Todo[] = await prisma.todo.findMany()
-//   return todos
-// }
 async function getTodosServerFn() {
   const session = await getServerSession(authOptions)
   const todos = await prisma.todo.findMany({

@@ -14,15 +14,18 @@ export default function LoginPage() {
   const { data: session } = useSession()
 
   const handleTestSignIn = async () => {
+    setLoading(true)
     try {
-      setLoading(true)
       const res = await signIn('credentials', {
         email: 'test@test.com',
         password: 'test',
         callbackUrl: AppRoutes.Home,
         redirect: true
       })
-      setLoading(false)
+
+      if (res?.ok) {
+        setLoading(false)
+      }
     } catch (error) {
       setLoading(false)
       throw error
@@ -37,14 +40,20 @@ export default function LoginPage() {
     }
 
     setLoading(true)
-    signIn('credentials', {
-      email: userInfo.email,
-      password: userInfo.password,
-      callbackUrl: AppRoutes.Home,
-      redirect: true
-    })
-      .finally(() => setLoading(false))
-      .catch((error) => console.error(error))
+    try {
+      const res = await signIn('credentials', {
+        email: userInfo.email,
+        password: userInfo.password,
+        callbackUrl: AppRoutes.Home,
+        redirect: true
+      })
+
+      if (res?.ok) {
+        setLoading(false)
+      }
+    } catch (error) {
+      setLoading(false)
+    }
   }
 
   return (

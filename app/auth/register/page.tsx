@@ -37,14 +37,12 @@ export default function RegisterPage() {
           password
         })
       })
-      setLoading(false)
 
-      if (!res.ok) {
-        throw new Error('Failed to create todo')
+      if (res.ok) {
+        // Todo creation was successful, redirect
+        setLoading(false)
+        router.push(AppRoutes.Login)
       }
-
-      // Todo creation was successful, redirect
-      router.push(AppRoutes.Login)
     } catch (error) {
       setLoading(false)
       throw error
