@@ -3,8 +3,7 @@ export enum AppRoutes {
   New = '/new-todo',
   Update = '/update-todo',
   Info = '/info',
-  Login = '/auth/login',
-  Register = '/auth/register'
+  Auth = '/auth'
 }
 
 // const routes = Object.values(AppRoutes)

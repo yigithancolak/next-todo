@@ -23,14 +23,6 @@ export default function TodoItem(props: TodoItemProps) {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  // const { mutateAsync: deleteTodo, isLoading: deleteLoading } = useMutation({
-  //   mutationFn: () => deleteTodoFn(id),
-  //   // onError: (err: any) => toast.error(err.response.data.error),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ['todos'] })
-  //   }
-  // })
-
   // Handle Delete Mutation to Update Optimistic Updates
   const deleteMutation = useMutation({
     mutationFn: deleteTodoFn,

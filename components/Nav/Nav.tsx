@@ -4,7 +4,7 @@ import { Session } from 'next-auth'
 import { signOut } from 'next-auth/react'
 import { Url } from 'next/dist/shared/lib/router/router'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { AiOutlineQuestion } from 'react-icons/ai'
 import { FiLogOut } from 'react-icons/fi'
 import { IoCreateOutline } from 'react-icons/io5'
@@ -34,7 +34,7 @@ const navButtons: NavButton[] = [
     title: 'Sign In',
     icon: RiUserSharedLine,
     authenticated: false,
-    route: AppRoutes.Login
+    route: AppRoutes.Auth
 
     // method: signIn
   },
@@ -55,7 +55,6 @@ const navButtons: NavButton[] = [
 export default function Nav(props: NavProps) {
   const { session } = props
   const pathname = usePathname()
-  const router = useRouter()
 
   const renderNavButtons = (pathname: string) => {
     const buttons = [...navButtons]

@@ -7,7 +7,6 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt'
   },
-  // Configure one or more authentication providers
   providers: [
     CredentialsProvider({
       name: 'Sign in',
@@ -32,7 +31,7 @@ export const authOptions: NextAuthOptions = {
           }
         })
 
-        if (!user) throw new Error('Invalid credentials')
+        if (!user) return null
 
         const isPasswordValid = await compare(
           credentials.password,
@@ -80,7 +79,7 @@ export const authOptions: NextAuthOptions = {
     }
   },
   pages: {
-    signIn: '/auth/login'
+    signIn: '/auth'
   }
 }
 
