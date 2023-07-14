@@ -1,5 +1,6 @@
-import { PageType, UserInfoType, pageLabels } from '@/app/auth/page'
+import { PageType, UserInfoType } from '@/app/auth/page'
 import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
+import { pageLabels } from '@/lib/utils/constants/pageLabels'
 import { signIn } from 'next-auth/react'
 import { FormEvent, FormEventHandler, useState } from 'react'
 

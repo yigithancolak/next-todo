@@ -3,6 +3,7 @@
 import AuthForm from '@/components/AuthForm/AuthForm'
 import { containerVariant } from '@/lib/framer-motion/variants'
 import { AppRoutes } from '@/lib/utils/constants/AppRoutes'
+import { pageLabels } from '@/lib/utils/constants/pageLabels'
 import { motion } from 'framer-motion'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
@@ -14,19 +15,6 @@ export type UserInfoType = {
   name?: string
   email: string
   password: string
-}
-
-export const pageLabels = {
-  signInLabels: {
-    header: 'Login',
-    event: 'Sign In',
-    formFooter: "Don't have an account ? "
-  },
-  signUpLabels: {
-    header: 'Register',
-    event: 'Sign Up',
-    formFooter: 'Have an account ? '
-  }
 }
 
 export default function AuthPage() {
