@@ -1,34 +1,110 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# NEXT TODO
 
-First, run the development server:
+Todo app with authorization, CRUD operations of todos and real time, optimistic updates.
+
+## Features
+
+- Creating account
+- Personalized data for each account
+- Smooth experience on deleting and updating todo data
+- Responsive UI
+- Improved UX with animations
+
+## Tech Stack
+
+**Language:** TypeScript
+
+**Framework:** React, Next.js
+
+**Styling:** TailwindCSS, Framer-Motion
+
+**Data Fetching:** Tanstack Query
+
+**Database-ORM:** Prisma, Vercel-Postgres
+
+**Auth:** Next-auth
+
+**Server-side:** Node.js (Next.js api routes)
+
+**Encryption:** Bcrypt
+
+
+
+
+
+
+## Run Locally
+
+Clone the project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+  git clone https://github.com/yigithancolak/next-todo.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Go to the project directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+  cd next-todo
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Install dependencies
 
-## Learn More
+```bash
+  npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+Start the server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+  npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Optimistic Updates
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+For improving the UX optimistic updates implemented on the deleting and updating operations with using tanstack/react-query
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```javascript
+// Handle Delete Mutation to Update Optimistic Updates
+  const deleteMutation = useMutation({
+    mutationFn: deleteTodoFn,
+    onMutate: async (id) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['todos'] })
+
+      // Snapshot the previous value
+      const previousTodos = queryClient.getQueryData<Todo[]>(['todos'])
+
+      // Optimistically remove the todo from the array
+      let updatedTodos: Todo[] = []
+
+      if (previousTodos) {
+        updatedTodos = [...previousTodos].filter((todo) => todo.id !== id)
+      }
+
+      queryClient.setQueryData<Todo[]>(['todos'], updatedTodos)
+
+      // Return a context object with the snapshotted value
+      return { previousTodos }
+    },
+
+    // If the mutation fails, use the context we returned above
+    onError: (context: { previousTodos?: Todo[] | undefined }) => {
+      queryClient.setQueryData<Todo[]>(['todos'], context.previousTodos)
+    },
+
+    // Always refetch after error or success:
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] })
+    }
+  })
+
+```
+## APP DEMO
+[screen-recording (5).webm](https://github.com/yigithancolak/next-todo/assets/122079418/d0ada79e-adce-4f52-ae3c-839bf42b9343)
+
+
+
+
+In this example i deleted todo without waiting for server response to give user a smooth experience. If server response is not okay so todo immediately appears on screen. This is the down-side when performing optimistic update, if the operation is not successful on server-side it immediately affects client-side.
