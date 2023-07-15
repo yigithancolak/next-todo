@@ -22,32 +22,6 @@ export default async function HomePage() {
 
   const dehydratedState = dehydrate(queryClient)
 
-  // const { data, isLoading } = useQuery<Todo[]>({
-  //   queryKey: ['todos'],
-  //   queryFn: getTodosFn
-  // })
-
-  // if (isLoading)
-  //   return (
-  //     <div className='flex h-[40vh] items-center justify-center'>
-  //       <Loading />
-  //     </div>
-  //   )
-  // if (!data)
-  //   return (
-  //     <div className='flex h-[40vh] items-center justify-center'>
-  //       <p className='text-center text-h3'>No data has found.</p>
-  //     </div>
-  //   )
-
-  // if (data && data.length === 0) {
-  //   return (
-  //     <div className='flex h-[40vh] items-center justify-center'>
-  //       <p className='text-center text-h3'>You don&apos;t have todos.</p>
-  //     </div>
-  //   )
-  // }
-
   return (
     <Hydrate state={dehydratedState}>
       <TodosContainer />
