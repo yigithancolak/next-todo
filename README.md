@@ -101,10 +101,11 @@ For improving the UX optimistic updates implemented on the deleting and updating
   })
 
 ```
+In this example i deleted todo without waiting for server response to give user a smooth experience. If server response is not okay so todo immediately appears on screen. This is the down-side when performing optimistic update, if the operation is not successful on server-side it immediately affects client-side.
+
 ## APP DEMO
 [screen-recording (5).webm](https://github.com/yigithancolak/next-todo/assets/122079418/d0ada79e-adce-4f52-ae3c-839bf42b9343)
 
 
 
 
-In this example i deleted todo without waiting for server response to give user a smooth experience. If server response is not okay so todo immediately appears on screen. This is the down-side when performing optimistic update, if the operation is not successful on server-side it immediately affects client-side.
